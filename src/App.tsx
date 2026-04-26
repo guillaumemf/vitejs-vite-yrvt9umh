@@ -445,4 +445,104 @@ export default function App() {
             const canAfford = euros >= u.cost;
             return (
               <div key={u.id} style={{
-           
+                display: "flex", alignItems: "center", gap: "0.6rem",
+                background: bought ? "rgba(22,163,74,0.15)" : canAfford ? "rgba(249,115,22,0.1)" : "rgba(255,255,255,0.04)",
+                border: `1px solid ${bought ? "rgba(22,163,74,0.4)" : canAfford ? "rgba(249,115,22,0.3)" : "rgba(255,255,255,0.08)"}`,
+                borderRadius: 10, padding: "0.55rem 0.7rem",
+              }}>
+                <div style={{ fontSize: 22 }}>{u.icon}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: "bold", fontSize: "0.82rem", color: bought ? "#86efac" : "#fed7aa" }}>
+                    {u.name} {bought && "✓"}
+                  </div>
+                  <div style={{ fontSize: "0.7rem", color: "#a3714a" }}>{u.desc}</div>
+                </div>
+                {!bought && (
+                  <button className="btn-buy" onClick={() => buyUpgrade(u)} disabled={!canAfford} style={{
+                    padding: "0.3rem 0.6rem", borderRadius: 8,
+                    background: canAfford ? "linear-gradient(135deg, #ea580c, #f97316)" : "rgba(255,255,255,0.1)",
+                    color: canAfford ? "white" : "#a3714a", fontSize: "0.72rem", fontWeight: "bold",
+                    cursor: canAfford ? "pointer" : "not-allowed", whiteSpace: "nowrap",
+                  }}>
+                    {formatEuros(u.cost)}
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* BUILDINGS */}
+      <section style={{ padding: "0 1rem" }}>
+        <h3 style={{ fontSize: "0.62rem", textTransform: "uppercase", letterSpacing: "0.12em", color: "#a3714a", margin: "0 0 0.5rem" }}>
+          🏗️ Équipements
+        </h3>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
+          {actBuildings.map((b) => {
+            const count = buildings[b.id] ?? 0;
+            const cost = getBuildingCost(b, count);
+            const canAfford = euros >= cost;
+            const totalProd = b.id === "basket"
+              ? b.baseProduction * count * STRAWBERRY_VALUE
+              : b.baseProduction * count;
+            return (
+              <div key={b.id} style={{
+                display: "flex", alignItems: "center", gap: "0.6rem",
+                background: count > 0 ? "rgba(249,115,22,0.08)" : "rgba(255,255,255,0.04)",
+                border: `1px solid ${count > 0 ? "rgba(249,115,22,0.25)" : "rgba(255,255,255,0.08)"}`,
+                borderRadius: 10, padding: "0.55rem 0.7rem",
+              }}>
+                <div style={{ fontSize: 22 }}>{b.icon}</div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontWeight: "bold", fontSize: "0.82rem", display: "flex", alignItems: "center", gap: "0.3rem", flexWrap: "wrap" }}>
+                    {b.name}
+                    {count > 0 && (
+                      <span style={{ background: "#ea580c", color: "white", borderRadius: 99, padding: "0 5px", fontSize: "0.62rem" }}>×{count}</span>
+                    )}
+                  </div>
+                  <div style={{ fontSize: "0.7rem", color: "#a3714a" }}>
+                    {b.desc}
+                    {count > 0 && <span style={{ color: "#f97316" }}> · {formatEuros(totalProd)}/sec</span>}
+                  </div>
+                </div>
+                <button className="btn-buy" onClick={() => buyBuilding(b)} disabled={!canAfford} style={{
+                  padding: "0.3rem 0.6rem", borderRadius: 8,
+                  background: canAfford ? "linear-gradient(135deg, #ea580c, #f97316)" : "rgba(255,255,255,0.1)",
+                  color: canAfford ? "white" : "#a3714a", fontSize: "0.72rem", fontWeight: "bold",
+                  cursor: canAfford ? "pointer" : "not-allowed", whiteSpace: "nowrap",
+                }}>
+                  {formatEuros(cost)}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ACT 3 TEASER */}
+      {act3Unlocked && (
+        <div style={{
+          margin: "1.5rem 1rem 0", padding: "1rem", borderRadius: 12,
+          background: "linear-gradient(135deg, rgba(234,179,8,0.15), rgba(161,98,7,0.1))",
+          border: "1px solid rgba(234,179,8,0.4)", textAlign: "center",
+        }}>
+          <div style={{ fontSize: 32 }}>🚜</div>
+          <div style={{ fontWeight: "bold", color: "#fde047", marginBottom: 4 }}>Acte 3 débloqué !</div>
+          <div style={{ fontSize: "0.8rem", color: "#fef08a" }}>
+            Un vieux fermier près de Chartres veut vendre son hectare.<br />
+            Tu as les moyens. Il est temps d'acheter pour de vrai.
+          </div>
+          <div style={{ marginTop: "0.75rem", fontSize: "0.7rem", color: "#a3714a", fontStyle: "italic" }}>
+            (Acte 3 en cours de développement — bientôt disponible)
+          </div>
+        </div>
+      )}
+
+      {/* FOOTER */}
+      <div style={{ textAlign: "center", marginTop: "2rem", fontSize: "0.6rem", color: "#5c3317" }}>
+        Sauvegarde auto · {pseudo} · {actLabel}
+      </div>
+    </div>
+  );
+}
