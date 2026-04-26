@@ -23,7 +23,8 @@ interface SaveData {
 const SAVE_KEY = "chapardeur_save_v3";
 const SAVE_KEYS_LEGACY = ["chapardeur_save_v1", "chapardeur_save_v2"];
 const STRAWBERRY_VALUE = 0.10;
-const ACT_GOALS = [0, 500, 50000, 2000000, 50000000, 1000000000, 10000000000];
+// ACT_GOALS[n] = total euros needed to ENTER act n
+const ACT_GOALS = [0, 0, 500, 50000, 2000000, 50000000, 1000000000];
 const ACT_LABELS = ["","Acte I — Le Chapardeur","Acte II — Le Micro-Maraîcher","Acte III — L'Exploitant","Acte IV — L'Agri-Entrepreneur","Acte V — L'Industriel","Acte VI — La Multinationale"];
 const ACT_CONTEXTS = ["","Le Marché de Rungis, 6h du matin","Ta parcelle à Montreuil","Ton exploitation à Chartres","Ton domaine de 50 hectares","Ton usine agroalimentaire","Ton siège mondial, Paris 8e"];
 const ACT_CLICK_LABELS = ["","Voler des fraises","Récolter à la main","Superviser les parcelles","Signer des contrats","Lancer des appels d'offres","Décider des acquisitions"];
@@ -373,7 +374,7 @@ export default function App() {
     return boughtInAct>=u.requires;
   });
   const actBuildings=ALL_BUILDINGS.filter(b=>b.act<=currentAct);
-  const goal=ACT_GOALS[Math.min(currentAct+1,6)];
+  const goal=ACT_GOALS[Math.min(currentAct+1,6)]??ACT_GOALS[6];
   const progress=currentAct===6?100:Math.min((totalEuros/goal)*100,100);
   const actColor=ACT_COLORS[currentAct]||"#f97316";
 
